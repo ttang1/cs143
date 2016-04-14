@@ -1,0 +1,212 @@
+CS143A lecture 4 4/7/16
+
+Process Creation
+Resource sharing
+
+Process Termination
+
+Must be careful about not proliferating too many processes
+
+Must explicitly make sure that process is terminated after that process is finished.
+
+The job of the operating system must allocate memory // memory management
+
+must deallocate memory after allocating it..
+
+may end up haveing processes that are hanging around or the process is gone but the memory is not released.
+
+Process must internally call "exit()"
+
+Parent may terminate execution of child processes.
+	child has exceeded allocated resources
+	task assigned to child is no longer required
+	parent is exiting
+		os does not allow child to continue if parent terminates
+		cascading termination
+		.. otherwise zombie children will remain
+	
+Processes are quite heavy weight and complex. Context switching is also complex.
+
+__Threads__
+
+Processes do not share resources well..
+	high context switching overhead
+Idea: Seperate concurrency from protection..
+MULTITHREADING: a single program made up of a number of different concurrent activities
+A thread (can think of it as lightweight process).. 
+	Each process has its own memory and I/O
+	A process can be split into multiple threads, each thread shares the same memory of the process
+	- basic unit of CPU utilization; it consists of :
+		program counter, register set and stack space
+	- a thread shares the folloiwing with peer threads:
+		code section, data section and OS resources (open files, signals)
+		no protection between threads.. there IS protection across processes
+	- collectively called a task
+Heavyweight process is a task with one thread
+
+
+Multi cores and multi threading are totally different concepts
+SINGLE THREADED
+[Code, Data, Files]
+[Registers, Stack]
+[single thread]
+MULTITHREADED
+[Code, Data, Files]
+[Registers|Registers|Registers]
+[Stack|Stack|Stack]
+[thread|thread|thread]
+
+switching to different threads are less expensive
+
+threads encapsulate concurrency
+
+Benefits of threads..
+- responsiveness
+- better resource sharing
+- economy.. efficient.. do more with less memory
+- utilization 
+
+- In a multi threaded task, while one server thread is blocked and waiting, 
+a second thread in the same task can run.
+	cooperation of multiple threads in the same job confers higher throughput and improved performance.
+	applications that require sharing a common buffer (i.e. producer-consumer) benefit from thread utilization
+- Threads provide a mechanism that allows sequential processes to make blocking 
+system calls while also achieving parallelism
+
+- Thread context switch still requires a register set switch, but no management related work!!
+- Thread States
+- No protection among threads
+
+
+Examples: Multithreaded programs
+	Embedded systems
+		- elevators, planes, medical systems, wristwatches
+		- single program, concurrent operations
+	Most modern OS kernels
+		- intertnally concurrent because have to deal with concurrent requests by multiple users
+		- no protection needed within kernel
+	Database servers
+		- Access to shared data by many concurrent users
+		- also background utility processing must be done
+// These things use multi threading
+	Network Servers
+		- concurrent requests from networkd
+		- again,single program
+	Parallel Programming
+
+	Real operating systems ave either
+		one or many address spaces
+		one or many threads per address space
+
+
+
+
+	One					| 				Many
+One	|MS/Dos.. Early Mac	|	Traditional Unix
+Many|Embedded Systems	|	
+
+Types of threads..
+- Kernel-supported threads
+- User-level threads
+- Hybrid approach implements both user-level and kernel-supported threads 
+
+
+Kernel Threads..
+- supported by the kernel
+	native threads supported directly by the kernel
+	every thread can run or block independently
+	one process may have several threads waiting on different things
+- downside of kernel threads: a bit expensive
+	need to make a crossing into kernel mode to schedule
+- examples
+	windows xp/2000
+
+User Threads..
+- supported about the kernel, via a set of library calls at the user level
+	thread management done by user-level threads library
+		- user prorgram provides scheduler and thread package
+	may have several user threads per kernel thread
+	user threads may be scheduled non-premptively relative to each other (only switch on yield())
+- advanetages
+	cheap and fast
+		threads do not need to call OS and cause interrupts to kernel
+- disadvantages : if kernel is single threaded, system call from any thread can block the entire task
+
+Multithreading Models
+
+Many-to-One
+- many user-level threads mapped to single kernel thread
+examples:
+	solaris green threads
+	gnu portable threads
+
+One-to-One
+- each user-level thread maps to kernel thread
+
+Many-to-Many
+- allows many user level threads to be mapped to many kernel threads
+- allows the operating system to create a sufficient number of kernel threads
+
+Thread support in Solaris 2
+- Solaris 2 is a version of UNIX with support for
+	kernel and user level threads, symmetric multiprocessings and real-time scheduling
+- lightweight processes (LWP)
+	intermediate bwtreen user and kernel level threads
+- resource requirements of thread types
+	kernel thread: small data structutre and stack; thread switching does not require changing memory access information - relatively fast
+	Lightwight process: PCB with register data, accounting and memory information - switching between LWP is relatively slow
+	User-level thread: only needs stack and program counter; no kernel involvement means fast switching. kernel only sees the LWPs that support user-level threads
+
+Two-level Model
+- similar to M:M, except that it allows a user to..............???
+
+
+Threading Issues..
+- Semantics of fork() and exec() system calls
+- Thread cancellation
+- Signal handling
+- Thread pools
+- Thread specific data
+
+// reason to do multithreading is to exploit the concurrency
+// what happens when a thread dies?.. something to think about.
+
+Multi (processing, programming, threading)
+- Definitions:
+	Multiprocessing = Multiple CPUs
+	Multiprogramming = Multiple Jobs or Processes
+	Multithreading = Multiple threads per Process
+- What does it mean to run two threads "concurrently"?
+	Scheduler is free to run threads in any order and interleaving: FIFO, random, ..
+	Dispatcher can choose to run each thread to completion or time-slice in big chunks or small chunks
+		// Dispatcher is a mechanism
+
+__Cooperating Processes__
+- concurrent processes can be
+	independent processes
+		cannot affect or be affected by the execution of another process
+	cooperating processes
+		can affect or be affected by the execution of another proces
+- advantages of process cooperation:
+	information sharing
+	computation speedup
+	modularity
+	convenience (editing, printitng, compiling)
+- concurrent execution requires
+	process communication and process synchronization
+
+concurrency is inherent in a program
+something that is concurrent doenst need to be in parallel
+
+Interprocess Communication (IPC)
+[P1]<->[P2]<->[P3]
+- seperate address space isolates processes
+	high creation/ memory overhead; (Relatively) high context-switch overhead
+- mechanism for processes to communicate and syunchronize actions
+	via shared memory - accomplished by mapping addesses to common DRAM
+		read and write through memory
+	via messaging system - processing communicate without resorting to shared variables
+		send() and receive() messages
+		can be used over the network
+	Messageing system and shared memory not muruially exclusive
+		can be used simultaneouslt within a single OS or a single process

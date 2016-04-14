@@ -1,0 +1,21 @@
+CS143A lecture 2 3/31/16
+
+Topics for today...
+
+Computer System and OS Structures
+	- Computer System Organization
+	- Process abstraction and hardware protection
+	- Ssytem call and OS services
+	- storage architecture
+
+
+Computer System Organization
+
+
+CPU		Disk Constroller	USB controller		Graphics adaptor
++		+					+					+
+
+Cpu execution
+
+-----
+hand written notes..

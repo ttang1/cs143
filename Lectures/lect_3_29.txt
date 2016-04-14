@@ -1,0 +1,113 @@
+CS143A lecture 1 3/29/16
+
+What is an Operating System?..
+	OS is the software that acts as an intermediary between the user applications 
+	and hardware applications
+
+
+Layers {
+	User[s]
+	App
+	OS
+	Hrdw
+}
+
+OS Roles
+	Referee:
+		- resource allocation among users, applications,  processes
+		- isolation of different users, applications from each other
+		- communication between users, applications
+	
+	Illusionist:
+		- each application appears to have the entire machine to itself
+		- infinite number of processors, (near) infinite amount of memory, reliable storage, 
+		reliable network transport
+		// make a good looking world for the user.. Under the hood it looks uglier.. kind of like the matrix
+
+	Glue:
+		- libraties, user interface widgets, ...
+		- reduces cost of developing software
+		// doing everything from scratch is a lot harder
+
+
+
+Example: File Systems
+	Referee:
+		- prevent users from accessing each other's files without permission
+	
+	Illusionist:
+		- files can grow (nearly) arbitrarily large
+		- files persist even when the machine crashes in the middle of a save
+	
+	Glue:
+		named directories, printf, ...
+
+
+
+OS challenges...
+	// it is very challenging to write an operating system..
+	Reliability:
+		- does the system do what it was designed to do?
+	
+	Availability:
+		- makes sure all the resources are available to use
+		
+	Security:
+		- can the system be compromised by an attacker?..
+			should only be confined to application domain (ideally..)
+
+	Privacy:
+
+	Performance:
+		Latency / response time
+			- how long does an operation take to complete?
+		Throughput
+			- how many operations can be done per unit of time?
+		Overhead
+		Fairness
+		Predictability
+	
+	Portability
+		- for programs:
+			applications programming interface (API)
+		- for the kernel:
+			hardware abstraction layer
+			// kernel is the core of the operating system.. 
+	
+OS needs to keep pace with hardware improvements
+
+Why should I study OS????...
+	Advantages in knowing whats under the hood..
+	need to understand interation beteen the hardware and software
+	need to understand basic principoles in the design of computer systems
+	
+	it enables you to do things that are difficult/impossible otherwise
+
+
+Early Systems - Bare Machine (1950s)
+	Hardware - expesive; Human - cheap
+	
+	Structure
+		Large machines from console
+		Single user system
+			Programmer/User as operator
+		Paper tape or punched cards
+	Early Software
+		Assemblers, compilers, linkers, loaders, device drivers, 
+	
+Batch Systems (1960s)
+	- reduce sertup time by batching jobs iwith similar requirements
+	- hire an operator
+		- user is not the operator
+	- automatic job sequencing
+		- forms a rudementary os
+		- resident monitor
+			- holds initial control, control transfers to job then back to monitor
+		- problems
+	
+Timesharing
+	Hardware getting cheaper; human getting expensive
+
+	Programs queued for exec in FIFO order
+
+	
